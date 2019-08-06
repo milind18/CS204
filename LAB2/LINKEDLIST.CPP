@@ -10,15 +10,7 @@ struct node
 
 struct node* head=NULL;
 int Len=0;
-void print()
-{
-	node* temp=head;
-	while(temp!=NULL)
-	{
-		cout<<temp->x<<" "<<temp->y<<endl;
-		temp=temp->next;
-	}
-}
+
 void AddFirst(int a,int b)
 {
 	node* n;
@@ -31,28 +23,32 @@ void AddFirst(int a,int b)
 
 }
 
-int DelFirst()
+void DelFirst()
 {
 	if(Len==0)
-		return -1;
+		{
+		    cout<<-1<<endl;
+		    return;
+		}
 	struct node* headt=head;
 	head=head->next;
 	delete headt;
 	Len--;
-	return 1;
+	return;
 }
-int Del(int a,int b)
+void Del(int a,int b)
 {
 	if(Len==0)
 	{
-		return -1;
+		cout<<-1<<endl;
+		return;
 	}
 
 	if(head->x==a&&head->y==b)
 	{
 		head=head->next;
 		Len--;
-		return 1;
+		return;
 	}
 
 	node* temp=head;
@@ -65,7 +61,7 @@ int Del(int a,int b)
 			temp->next=temp->next->next;
 			delete headt;
 			Len--;
-			return 1;
+			return;
 		}
 	}
 }
@@ -77,7 +73,8 @@ void Search(float d)
 		{
         if(sqrt(temp->x*temp->x+temp->y*temp->y)<=d)
 		{
-			cout<<temp->x<<" "<<temp->y;
+			cout<<"("<<temp->x<<","<<temp->y<<") ";
+
 		}
 		temp=temp->next;
 		}
@@ -130,7 +127,7 @@ int main()
 			case 5: cin>>x>>y;
 					cout<<Search(x,y)<<endl;
 					break;
-			case 6:print();
+			case 6: cout<<length();
 					break;
 
 			default:cout<<"-1"<<endl;
