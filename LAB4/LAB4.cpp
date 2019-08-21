@@ -1,3 +1,6 @@
+//VERSION WHICH WORKS WITH UNARY MINUS - DATE:21.Aug.2019
+
+
 #include <bits/stdc++.h>
 #define lli long long int
 #define vt vector
