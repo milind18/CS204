@@ -4,191 +4,401 @@
 #define f(x, y, z) for (lli x = y; x < z; x++)
 #define fd(x, y, z) for (lli x = y; x > z; x--)
 
-
 using namespace std;
 
-vector<string> stringTovector(string s)
+
+int dbg=0;
+//cout<<"DEB"<<dbg++<<endl;                //DBG;
+
+
+//   STACK CLASS for INFIX to POSTIFIX  CONVERSION
+class strstack
 {
-    int n = s.length();
-    vector<string> stv;
-    for(int i = 0; i<n;i++)
-    {
-        string temp="";
-        if((s[i] >= '0' && s[i] <= '9')) 
-        {
-            int j = i;
-            while(i!=s.size() && s[i] >= '0' && s[i] <= '9')
-            {
-                temp+=s[i];
-                i++;
-            }
-            
-            i--;
-        }
-        else 
-        {
-            temp+=s[i];
-        }
-        stv.push_back(temp);
+public:
+    vector<string> arr;
+    void push(string x);
+    string top();
+    int pop();
+    int isempty();
 
-    }
+};
 
-    return stv;
+
+void strstack::push(string x)
+{
+    arr.push_back(x);
 }
-int prec(string c) 
-{ 
-    if(c == "^") 
-    return 3; 
-    else if(c == "*" || c == "/") 
-    return 2; 
-    else if(c == "+" || c == "-") 
-    return 1; 
+string strstack::top()
+{
+    return arr[arr.size()-1];
+}
+int strstack::pop()
+{
+    if(arr.size()==0)
+    {
+        return -1;
+    }
     else
-    return -1; 
-} 
-vector<string> infixToPostfix(vector<string> s) 
-{ 
-    stack<string> st; 
-    st.push("N"); 
-    int l = s.size(); 
-    vector<string> ns;
-    for(int i = 0; i < l; i++) 
-    { 
-        if((s[i][0] >= '0' && s[i][0] <= '9')) 
-            ns.push_back(s[i]);
-        else if(s[i] == "(") 
-           st.push("("); 
-        else if(s[i] == ")") 
-        { 
-            while(st.top() != "N" && st.top() != "(") 
-            { 
-                string c = st.top(); 
-                st.pop(); 
-                ns.push_back(c);
-            } 
-            if(st.top() == "(") 
-            { 
-                string c = st.top(); 
-                st.pop(); 
-            } 
-        } 
-        else{ 
-            while(st.top() != "N" && prec(s[i]) <= prec(st.top())) 
-            { 
-                if(s[i]=="^"&&st.top()=="^") break;
-                string c = st.top(); 
-                st.pop(); 
-                ns.push_back(c); 
-            } 
-            st.push(s[i]); 
-        } 
-  
-    } 
-    while(st.top() != "N") 
-    { 
-        string c = st.top(); 
-        st.pop(); 
-        ns.push_back(c); 
-    } 
-      
-    return ns;
-  
-} 
+    {
+        arr.pop_back();
+        return 0;
+    }
+}
+int strstack::isempty()
+{
+    if(arr.size()==0)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+
+
+
 
 struct node
 {
-  string s;
-  node* lch=NULL,*rch=NULL;
+    string x;
+    bool op;
+    node* left;
+    node* right;
+
 };
-lli evaluate(node *root)
+
+struct node* createnode(string inp,bool y=false,node*a=NULL,node*b=NULL)
 {
-   string s=root->s;
-   lli ans=0;
-   if(s!="+" && s!="-" && s!="*" && s!="/" && s!="^")
-   return stoi(s);
-   else
-   {
-     int lans=evaluate(root->lch),rans=evaluate(root->rch);
-     if(s=="+")
-       ans=lans+rans;
-     else if(s=="-")
-       ans=lans-rans;
-     else if(s=="*")
-       ans=lans*rans;
-     else if(s=="/")
-       ans=lans/rans;
-     else
-     {
-       ans=1;
-       f(i,0,rans)ans*=lans;
-     }
-   }
-   return ans;
-}
-node* construct_tree(vt <string> postfix)
-{
-   node *root=NULL;
-   vt <node*> stk;
-   int i=0;
-   while(i!=postfix.size())
-   {
-     if(postfix[i]!="+" && postfix[i]!="-" && postfix[i]!="*" && postfix[i]!="/" && postfix[i]!="^")
-       {
-         node *temp=(node *)malloc(sizeof(node));
-         temp->s=postfix[i];
-         f(j,0,postfix[i].size())
-         if(postfix[i][j]<'0' || postfix[i][j]>'9')return NULL;
-         stk.pb(temp);
-       } 
-     else
-     {
-       if(stk.size()<2)return NULL;
-       node *s1=stk.back();
-       stk.pop_back();
-       node *s2=stk.back();
-       stk.pop_back();
-       node *temp=(node *)malloc(sizeof(node));
-       temp->s=postfix[i];
-       temp->lch=s2;
-       temp->rch=s1;
-       stk.pb(temp); 
-     }
-     i++;
-   }
-   if(stk.size()!=1)return NULL;
-   return stk.back();
+    node* temp;
+    temp=(struct node*)malloc(sizeof(struct node));
+    temp->x=inp;
+    temp->op=y;
+    temp->left=a;
+    temp->right=b;
+    return temp;
 }
 
+class nodestack
+{
+public:
+    vector<node*> arr;
+    void push(node* x);
+    node* top();
+    int pop();
+    int isempty();
+
+};
 
 
-int main() 
-{ 
+void nodestack::push(node* x)
+{
+    arr.push_back(x);
+}
 
-  int t;cin>>t;
-
-
-  while(t--)
-  {
-
-
-    int n;cin>>n;
-
-    f(i,0,n)
+struct node* nodestack::top()
+{
+    return arr[arr.size()-1];
+}
+int nodestack::pop()
+{
+    if(arr.size()==0)
     {
-      string s;cin>>s;
+        return -1;
+    }
+    else
+    {
+        arr.pop_back();
+        return 0;
+    }
+}
+int nodestack::isempty()
+{
+    if(arr.size()==0)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
 
-      vt <string> postfix=stringTovector(s);
 
-      postfix=infixToPostfix(postfix);
 
-      node* root=construct_tree(postfix);
 
-      if(root!=NULL)        
-      cout<<evaluate(root)<<"\n";
-      else cout<<"CANT BE EVALUATED\n";
+
+int num(string s)
+{
+    int ans=0;
+    int siz=s.size()-1;
+    for(int i=0;i<=siz;i++)
+    {
+        ans*=10;
+        ans+=(s[i]-'0');
+        
+    }
+    return ans;
+}
+
+string str(vector<char>vec)
+{
+    string s;
+    s.resize(vec.size());
+    for(int i=0;i<vec.size();i++)
+    {
+        s[i]=vec[i];
+    }
+    return s;
+}
+int isop(char a)
+{
+    if(a>='0'&&a<='9')
+        return 0;
+    else
+    {if(a=='(')
+        return 2;
+    else
+    {
+        if(a==')')
+            return 3;
+        else
+            return 1;
     }
 
+    }
+}
+int compare(char a,char b)
+{
+    map<char,int> prec;
+    prec.insert({'+',1});
+    prec.insert({'-',1});
+    prec.insert({'*',2});
+    prec.insert({'/',2});
+    prec.insert({'^',3});
+    prec.insert({'@',4});
+    if(prec[a]>prec[b])
+        return 1;
+    else
+    {
+        if(prec[a]==prec[b])
+            return 0;
+        else
+            return -1;
+    }
+}
 
-  }
-  return 0; 	
+
+vector<string> convert(string input)
+{
+    vector<string> modified;
+    char temp;
+    for(int i=0;i<input.size();i++)
+    {
+
+        temp=input[i];
+        if(isop(temp))
+        {
+            
+            if((temp=='-')&&(i==0||isop(input[i-1])))
+            {
+                string x;
+                x.resize(1);
+                x[0]=0;
+                modified.push_back("0");        
+                modified.push_back("@");
+            }
+            else
+            {
+                string s;
+                s.resize(1);
+                s[0]=temp;
+                modified.push_back(s);
+            }
+
+        }
+        else
+        {
+//cout<<"DEB"<<dbg++<<endl;                //DBG;
+
+            vector<char> s;
+            s.push_back(temp);
+           while((i+1<input.size())&&(!isop(input[i+1])))
+            {
+                s.push_back(input[i+1]);
+                i=i+1;
+            }
+//cout<<"DEB"<<dbg++<<endl;                //DBG;
+
+            modified.push_back(str(s));
+        }
+//cout<<"DEB"<<dbg++<<endl;                //DBG;
+
+    }
+    return modified;
+}
+vector<string> infixtopost(vector<string> input)
+{
+    strstack stk;
+    vector<string>modified;
+    for(int i=0;i<input.size();i++)
+    {
+
+        int use=isop(input[i][0]);
+
+        //If you find an operator decided whether to push it on the stack or to pop some elements of the stack
+        if(use==1)
+        {
+
+
+            //IF you find an operator which has a lower priority than the top of the stack then push all the elements on to modified.
+            while(!stk.isempty()&&isop(stk.top()[0])==1)
+            {
+              int val=compare(stk.top()[0],input[i][0]);
+              //If top of the stack has a higher priority
+              if(val==1)
+              {
+                  modified.push_back(stk.top());
+                  stk.pop();
+              }
+              else
+              {
+                  break;
+              }
+
+            }
+            stk.push(input[i]);
+        }
+        else
+        {//IF you find an opening parenthesis push it on to the stack.
+            if(use==2)
+            {
+               stk.push((input[i]));
+            }
+            else
+            {
+                if(use==3)
+                {
+                    //IF you find a closing parenthesis pop all the elements until you find a closing parenthesis or the stack is empty.
+                    while(stk.isempty()!=1&&isop(stk.top()[0])!=2)
+                    {
+                        modified.push_back(stk.top());
+                        stk.pop();
+                    }
+                    //If there is an opening parenthesis on the stack remove it.
+                    if(stk.isempty()!=1&&isop(stk.top()[0])==2)
+                    {
+                        stk.pop();
+                    }
+                }
+                else
+                {
+                    modified.push_back(input[i]);
+                }
+
+            }
+        }
+
+    }
+    while(!stk.isempty())
+    {
+        modified.push_back(stk.top());
+        stk.pop();
+    }
+    return modified;
+
+}
+
+//Evaluation of the postfix using expression tress
+struct node* makeTree(vector<string> input)
+{
+    nodestack stk;
+    node * root=createnode(input[0]);
+    stk.push(root);
+
+    for(int i=1;i<input.size();i++)
+    {
+       
+        if(isop(input[i][0]))
+        {
+
+            node*temp;
+
+            node* r=stk.top();
+            stk.pop();
+            node* l=stk.top();
+            stk.pop();
+            temp=createnode(input[i],true,l,r);
+
+            if(l==root||r==root)
+            {
+                root=temp;
+              
+            }
+            stk.push(temp);
+        }
+        else
+        {
+            node* temp;
+            temp=createnode(input[i]);
+            stk.push(temp);
+        }
+    }
+    return root;
+}
+
+int evaluate(struct node* root)
+{
+    if(root->op==true)
+    {
+        switch(root->x[0])
+        {
+            case '+': return evaluate(root->left)+evaluate(root->right);
+                        break;
+            case '-': return evaluate(root->left)-evaluate(root->right);
+                        break;
+            case '*': return evaluate(root->left)*evaluate(root->right);
+                        break;
+            case '/': return evaluate(root->left)/evaluate(root->right);
+                        break;
+            case '^': return pow(evaluate(root->left),evaluate(root->right));
+                        break;
+            case '@': return evaluate(root->left)-evaluate(root->right);
+        }
+    }
+    else
+    {
+        return num(root->x);
+    }
+}
+void del(node* root)
+{
+    if(root->left!=NULL)
+    {
+        del(root->left);
+    }
+
+    if(root->right!=NULL)
+    {
+        del(root->right);
+    }
+    delete root;
+}
+int main()
+{
+
+string input;
+cin>>input;
+
+vector<string> ans=convert(input);
+vector<string>ans2=infixtopost(ans);
+
+struct node* root=makeTree(ans2);
+
+int finalans=evaluate(root);
+cout<<finalans;
+del(root);
+
+return 0;
 }
