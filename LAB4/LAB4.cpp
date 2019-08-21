@@ -11,7 +11,6 @@ using namespace std;
 
 
 int dbg=0;
-//cout<<"DEB"<<dbg++<<endl;                //DBG;
 
 
 //   STACK CLASS for INFIX to POSTIFIX  CONVERSION
@@ -60,7 +59,7 @@ int strstack::isempty()
 }
 
 
-
+//Node structure for implementation of expression tree
 
 
 struct node
@@ -130,7 +129,7 @@ int nodestack::isempty()
 
 
 
-
+//Converts given string to its number
 
 int num(string s)
 {
@@ -145,6 +144,7 @@ int num(string s)
     return ans;
 }
 
+//Converts a string to vector of characters
 string str(vector<char>vec)
 {
     string s;
@@ -155,6 +155,8 @@ string str(vector<char>vec)
     }
     return s;
 }
+
+//Checks if an input character is an operation, opening parenthesis,closing parenthesis or a digit
 int isop(char a)
 {
     if(a>='0'&&a<='9')
@@ -172,6 +174,8 @@ int isop(char a)
 
     }
 }
+
+//Compares the precedence of operators a and b
 int compare(char a,char b)
 {
     map<char,int> prec;
@@ -192,7 +196,7 @@ int compare(char a,char b)
     }
 }
 
-
+//Converts the input into a vector of strings. Each string in the vector is either an operator or a number
 vector<string> convert(string input)
 {
     vector<string> modified;
@@ -223,7 +227,7 @@ vector<string> convert(string input)
         }
         else
         {
-//cout<<"DEB"<<dbg++<<endl;                //DBG;
+
 
             vector<char> s;
             s.push_back(temp);
@@ -232,11 +236,11 @@ vector<string> convert(string input)
                 s.push_back(input[i+1]);
                 i=i+1;
             }
-//cout<<"DEB"<<dbg++<<endl;                //DBG;
+
 
             modified.push_back(str(s));
         }
-//cout<<"DEB"<<dbg++<<endl;                //DBG;
+
 
     }
     return modified;
@@ -391,17 +395,26 @@ void del(node* root)
 int main()
 {
 
-string input;
-cin>>input;
+    string input;
+    cin>>input;
 
-vector<string> ans=convert(input);
-vector<string>ans2=infixtopost(ans);
 
-struct node* root=makeTree(ans2);
+    //Converting the given input to a vector of strings
+    vector<string> ans=convert(input);
+    //Converting the infix expression to a postfix expression
+    vector<string>ans2=infixtopost(ans);
+    //Making the tree
+    struct node* root=makeTree(ans2);
+    //Evaluating the expression tree
+    int finalans=evaluate(root);
+    cout<<finalans<<endl;
 
-int finalans=evaluate(root);
-cout<<finalans;
-del(root);
+
+    //Deleting the Tree
+    del(root);
+
+
+
 
 return 0;
 }
