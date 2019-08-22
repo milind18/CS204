@@ -1,4 +1,4 @@
-//VERSION WHICH WORKS WITH UNARY MINUS - DATE:21.Aug.2019
+//VERSION WHICH WORKS WITH UNARY MINUS - DATE:22.Aug.2019
 
 
 #include <bits/stdc++.h>
@@ -139,7 +139,7 @@ int num(string s)
     {
         ans*=10;
         ans+=(s[i]-'0');
-        
+
     }
     return ans;
 }
@@ -207,13 +207,13 @@ vector<string> convert(string input)
         temp=input[i];
         if(isop(temp))
         {
-            
+
             if((temp=='-')&&(i==0||isop(input[i-1])))
             {
                 string x;
                 x.resize(1);
                 x[0]=0;
-                modified.push_back("0");        
+                modified.push_back("0");
                 modified.push_back("@");
             }
             else
@@ -326,7 +326,7 @@ struct node* makeTree(vector<string> input)
 
     for(int i=1;i<input.size();i++)
     {
-       
+
         if(isop(input[i][0]))
         {
 
@@ -341,7 +341,7 @@ struct node* makeTree(vector<string> input)
             if(l==root||r==root)
             {
                 root=temp;
-              
+
             }
             stk.push(temp);
         }
@@ -394,8 +394,11 @@ void del(node* root)
 }
 int main()
 {
-
-    string input;
+int t;
+cin>>t;
+while(t--)
+{
+     string input;
     cin>>input;
 
 
@@ -403,6 +406,7 @@ int main()
     vector<string> ans=convert(input);
     //Converting the infix expression to a postfix expression
     vector<string>ans2=infixtopost(ans);
+
     //Making the tree
     struct node* root=makeTree(ans2);
     //Evaluating the expression tree
@@ -412,8 +416,7 @@ int main()
 
     //Deleting the Tree
     del(root);
-
-
+}
 
 
 return 0;
