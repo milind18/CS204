@@ -1,6 +1,3 @@
-//VERSION WHICH WORKS WITH UNARY MINUS - DATE:22.Aug.2019
-
-
 #include <bits/stdc++.h>
 #define lli long long int
 #define vt vector
@@ -414,9 +411,7 @@ while(t--)
     cout<<finalans<<endl;
 
 
-    //Deleting the Tree
-    del(root);
-}
+ }
 
 
 return 0;
