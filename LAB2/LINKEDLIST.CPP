@@ -32,7 +32,7 @@ void DelFirst()
 		}
 	struct node* headt=head;
 	head=head->next;
-	delete headt;
+	free(headt);
 	Len--;
 	return;
 }
@@ -46,7 +46,10 @@ void Del(int a,int b)
 
 	if(head->x==a&&head->y==b)
 	{
+	    node*temp=head;
 		head=head->next;
+		free(head);
+	    temp=NULL;
 		Len--;
 		return;
 	}
@@ -59,22 +62,27 @@ void Del(int a,int b)
 		{
 			headt=temp->next;
 			temp->next=temp->next->next;
-			delete headt;
+			free(headt);
 			Len--;
 			return;
 		}
+		temp=temp->next;
+
 	}
+	cout<<-1<<endl;
+	return;
 }
 
 void Search(float d)
 {
 	node* temp=head;
 	int f=0;
+	int c=0;
 	while(temp!=NULL)
 		{
         if(sqrt(temp->x*temp->x+temp->y*temp->y)<=d)
 		{
-			cout<<"("<<temp->x<<","<<temp->y<<") ";
+			c++;
 		f=1;
 
 		}
@@ -82,29 +90,34 @@ void Search(float d)
 		}
 	if(f==0)
 		cout<<-1;
+    else
+        cout<<c;
+
 	cout<<endl;
-	
+
 
 
 }
 
-bool Search(int a,int b)
+void Search(int a,int b)
 {
 	node* temp=head;
 	while(temp!=NULL)
 	{
 		if(temp->x==a&&temp->y==b)
 		{
-			return true;
+			cout<<"True"<<endl;
+			return;
 		}
 		temp=temp->next;
 	}
-	return false;
+	cout<<"False"<<endl;
+	return ;
 }
 
 int length()
 {
-	return Len;
+	cout<<Len<<endl;
 }
 int main()
 {
@@ -131,9 +144,10 @@ int main()
 					Search(d);
 					break;
 			case 5: cin>>x>>y;
-					cout<<Search(x,y)<<endl;
+					Search(x,y);
+
 					break;
-			case 6: cout<<length();
+			case 6: length();
 					break;
 
 			default:cout<<"-1"<<endl;
