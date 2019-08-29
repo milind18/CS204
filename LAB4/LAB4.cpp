@@ -1,13 +1,15 @@
+
+
+
+
 #include <bits/stdc++.h>
-#define lli long long int
-#define vt vector
-#define f(x, y, z) for (lli x = y; x < z; x++)
-#define fd(x, y, z) for (lli x = y; x > z; x--)
+
 
 using namespace std;
 
 
 int dbg=0;
+
 
 
 //   STACK CLASS for INFIX to POSTIFIX  CONVERSION
@@ -126,11 +128,28 @@ int nodestack::isempty()
 
 
 
+
+
+
+
+
+
+
 //Converts given string to its number
 
 int num(string s)
 {
     int ans=0;
+    if(s[s.size()-1]=='-')
+    {
+        for(int i=0;i<s.size()-1;i++)
+        {
+            ans*=10;
+            ans+=(s[i]-'0');
+        }
+        ans=-ans;
+        return ans;
+    }
     int siz=s.size()-1;
     for(int i=0;i<=siz;i++)
     {
@@ -153,10 +172,56 @@ string str(vector<char>vec)
     return s;
 }
 
+//Converts an int to a string
+string numtostr(int num)
+{
+    string x;
+    int temp=num;
+    bool flag=false;
+    if(temp<0)
+        {
+            temp=-temp;
+	    flag=true;
+        }
+    if(temp==0)
+    {
+        x.push_back('0');
+    }
+    while(temp!=0)
+    {
+        x.push_back((char)((temp%10)+(int)('0')));
+            temp/=10;
+    }
+    string y;
+    for(int i=x.size()-1;i>=0;i--)
+    {
+	
+        y.push_back(x[i]);
+    }
+    if(flag==true)
+    {
+        y.push_back('-');
+    }
+    return y;
+}
+
 //Checks if an input character is an operation, opening parenthesis,closing parenthesis or a digit
+int isalphabet(char a)
+{
+    int asc=(int)(a);
+    if((asc>=(int)('a')&&asc<=(int)('z'))||(asc>=(int)('A')&&asc<=(int)('Z')))
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
 int isop(char a)
 {
-    if(a>='0'&&a<='9')
+    if(a>='0'&&a<='9'||(isalphabet(a)))
         return 0;
     else
     {if(a=='(')
@@ -171,22 +236,44 @@ int isop(char a)
 
     }
 }
+int isnumeral(char a)
+{
+    int asc=(int)(a);
+    if(asc>=(int)('0')&&asc<=(int)('9'))
+        return 1;
+    else
+        return 0;
+}
 
-//Compares the precedence of operators a and b
+
+//Compares the precedence of operators a and 
+int prec(char a)
+{
+    switch (a)
+    {
+        case '+':return 1;
+                    break;
+        case '-':return 1;
+                    break;
+        case '*':return 2;
+                    break;
+        case '/':return 2;
+                    break;
+        case '^':return 3;
+                    break;
+        case '@':return 4;
+                    break;
+
+    }
+}
 int compare(char a,char b)
 {
-    map<char,int> prec;
-    prec.insert({'+',1});
-    prec.insert({'-',1});
-    prec.insert({'*',2});
-    prec.insert({'/',2});
-    prec.insert({'^',3});
-    prec.insert({'@',4});
-    if(prec[a]>prec[b])
+    
+    if(prec(a)>prec(b))
         return 1;
     else
     {
-        if(prec[a]==prec[b])
+        if(prec(a)==prec(b))
             return 0;
         else
             return -1;
@@ -205,8 +292,9 @@ vector<string> convert(string input)
         if(isop(temp))
         {
 
-            if((temp=='-')&&(i==0||isop(input[i-1])))
+            if((temp=='-')&&(i==0||(isop(input[i-1]))))
             {
+
                 string x;
                 x.resize(1);
                 x[0]=0;
@@ -224,18 +312,19 @@ vector<string> convert(string input)
         }
         else
         {
+        
 
+                string s;
+                s.push_back(temp);
 
-            vector<char> s;
-            s.push_back(temp);
-           while((i+1<input.size())&&(!isop(input[i+1])))
-            {
-                s.push_back(input[i+1]);
-                i=i+1;
-            }
-
-
-            modified.push_back(str(s));
+                while((i+1<input.size())&&(isnumeral(input[i+1])))
+                {
+                    s.push_back(input[i+1]);
+                    i=i+1;
+                }
+                modified.push_back(s);
+            
+            
         }
 
 
@@ -261,8 +350,13 @@ vector<string> infixtopost(vector<string> input)
             {
               int val=compare(stk.top()[0],input[i][0]);
               //If top of the stack has a higher priority
-              if(val==1)
+              if(val==0&&input[i][0]=='^')
+                {
+                    break;
+                }
+              if(val>=0)
               {
+
                   modified.push_back(stk.top());
                   stk.pop();
               }
@@ -360,7 +454,8 @@ int evaluate(struct node* root)
         {
             case '+': return evaluate(root->left)+evaluate(root->right);
                         break;
-            case '-': return evaluate(root->left)-evaluate(root->right);
+            case '-':  return evaluate(root->left)-evaluate(root->right);
+
                         break;
             case '*': return evaluate(root->left)*evaluate(root->right);
                         break;
@@ -369,6 +464,7 @@ int evaluate(struct node* root)
             case '^': return pow(evaluate(root->left),evaluate(root->right));
                         break;
             case '@': return evaluate(root->left)-evaluate(root->right);
+
         }
     }
     else
@@ -387,20 +483,36 @@ void del(node* root)
     {
         del(root->right);
     }
-    delete root;
+    free(root);
 }
 int main()
 {
+	
+int n;
+cin>>n;
+while(n--)
+{
+
+
 int t;
 cin>>t;
 while(t--)
 {
-     string input;
+    
+
+    string input;
     cin>>input;
 
 
+   
+
     //Converting the given input to a vector of strings
     vector<string> ans=convert(input);
+    if(ans[ans.size()-1]=="fail")
+     {
+        cout<<"Cannot be evaluated"<<endl;
+        continue;
+    }
     //Converting the infix expression to a postfix expression
     vector<string>ans2=infixtopost(ans);
 
@@ -410,9 +522,11 @@ while(t--)
     int finalans=evaluate(root);
     cout<<finalans<<endl;
 
+    }
 
- }
 
+
+}       
 
 return 0;
 }
