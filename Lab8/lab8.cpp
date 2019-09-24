@@ -1,38 +1,38 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-double median(vector<double> vec)
+long double median(vector<long double> vec)
 {
 
-    double median;
+    long double median;
     size_t size = vec.size();
     median = vec[(size/2)];
     return median;
 }
 
-double mom(vector<vector<double> > values)
+long double mom(vector<vector<long double> > values)
 {
-    vector<double> medians;
+    vector<long double> medians;
 
     for (int i = 0; i < values.size(); i++)
     {
-        double m = median(values[i]);
+        long double m = median(values[i]);
         medians.push_back(m);
     }
 
     return median(medians);
 }
 
-double select(const vector<double> values, int k)
+long double select(const vector<long double> values, int k)
 {
 
-    vector<vector<double> > vec2D;
+    vector<vector<long double> > vec2D;
 
     int count = 0;
     while (count != values.size())
     {
         int countRow = 0;
-        vector<double> row;
+        vector<long double> row;
 
         while ((countRow < 5) && (count < values.size()))
         {
@@ -42,8 +42,8 @@ double select(const vector<double> values, int k)
         }
         vec2D.push_back(row);
     }
-    double m = mom(vec2D);
-    vector<double> arr, arr2;
+    long double m = mom(vec2D);
+    vector<long double> arr, arr2;
 
     for (int i = 0; i < vec2D.size(); i++)
     {
@@ -84,7 +84,7 @@ while(t--)
    int n;
    cin>>n;
    int x,y;
-   vector<double>radii;
+   vector<long double>radii;
    radii.clear();
    for(int i=0;i<n;i++)
    {
@@ -93,7 +93,7 @@ while(t--)
    }
 
 
-        double ans=select(radii,radii.size()+1-(radii.size()+1)/2);
+        long double ans=select(radii,radii.size()+1-(radii.size()+1)/2);
         cout<<ans<<endl;
 }
 
